@@ -1,63 +1,38 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate,Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import  Login from '../pages/auth/Login';
 
-// --- Import pages ---
-import Login from '../pages/auth/Login';
+import MainLayout from '../components/layout/MainLayout';
 import DashboardHome from '../pages/dashboard/DashboardHome';
+import CategoriesList from '../pages/categories/CategoriesList';
 import OrdersList from '../pages/orders/OrdersList';
 import OrderDetails from '../pages/orders/OrderDetails';
 import ProductsList from '../pages/products/ProductsList';
-import CategoriesList from '../pages/categories/CategoriesList';
+import ProductForm from '../pages/products/ProductForm';
 import TablesList from '../pages/tables/TablesList';
 import StaffManagement from '../pages/staff/StaffManagement';
 import GeneralSettings from '../pages/settings/GeneralSettings';
 
-// Component for protected routes
-const ProtectedRoute = ({ allowedRoles }) => {
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  if (!isAuthenticated) {
-    return <Navigate to="/login" />;
-  }
-
-  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/orders"  />;
-  }
-
-  return <Outlet />;
-};
-
-const AppRoutes = () => {
+function AppRoutes() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        {/* Public Route */}
-        <Route path="/login" element={<Login />} />
-
-        {/* Protected Routes */}
-        
-            {/* Manager & Waiter */}
-            <Route element={<ProtectedRoute allowedRoles={['Manager','Waiter']} />}>
-
-                <Route path="/dashboard" element={<DashboardHome />} />
-                <Route path="/orders" element={<OrdersList />} />
-                <Route path="/orders/:id" element={<OrderDetails />} />
-
-            </Route>
-            {/* Manager Only */}
-            <Route element={<ProtectedRoute allowedRoles={['Manager']} />}>
-            <Route path="/products" element={<ProductsList />} />
-            <Route path="/categories" element={<CategoriesList />} />
-            <Route path="/tables" element={<TablesList />} />
-            <Route path="/staff" element={<StaffManagement />} />
-            <Route path="/settings" element={<GeneralSettings />} />
-            </Route>
-
-        {/* Not Found */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route  path="/login" element={<Login />} />
+        {/* Route Principal li kay7tawi 3la MainLayout */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<DashboardHome />} />
+          <Route path="categories" element={<CategoriesList />} />
+          <Route path="orders" element={<OrdersList />} />
+          <Route path="orders/:id" element={<OrderDetails />} />
+          <Route path="products" element={<ProductsList />} />
+          <Route path="products/new" element={<ProductForm />} />
+          <Route path="tables" element={<TablesList />} />
+          <Route path="staff" element={<StaffManagement />} />
+          <Route path="settings" element={<GeneralSettings />} />
+        </Route>
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
-};
+}
 
 export default AppRoutes;
