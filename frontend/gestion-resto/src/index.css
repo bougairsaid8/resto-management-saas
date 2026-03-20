@@ -28,3 +28,15 @@ body {
   margin: 0;
  box-sizing: border-box;
 }
+
+/* Remove outline/border/box-shadow for the Recharts container used in Diagram */
+.no-outline,
+.no-outline * {
+  outline: none !important;
+}
+
+/* Ensure SVGs inside the container don't show default focus rings */
+.no-outline svg, .no-outline div {
+  outline: none !important;
+}
+
